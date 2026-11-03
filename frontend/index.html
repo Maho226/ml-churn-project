@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prédiction du churn</title>
+  <style>
+    body { font-family: Candara, Calibri, sans-serif; max-width: 520px; margin: 40px auto; padding: 0 16px; }
+    label { display: block; margin-top: 10px; }
+    input { width: 100%; padding: 6px; box-sizing: border-box; }
+    button { margin-top: 16px; padding: 8px 18px; }
+    #result { margin-top: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Prédiction du churn client</h1>
+  <form id="form">
+    <label>Âge <input id="age" type="number" value="35" required></label>
+    <label>Ancienneté (mois) <input id="anciennete" type="number" value="5" required></label>
+    <label>Revenu <input id="revenu" type="number" value="450000" required></label>
+    <label>Nombre de réclamations <input id="nb_reclamations" type="number" value="2" required></label>
+    <label>Montant mensuel <input id="montant_mensuel" type="number" value="25000" required></label>
+    <label>Retards de paiement <input id="retards_paiement" type="number" value="2" required></label>
+    <button id="predict" type="submit">Prédire</button>
+  </form>
+  <div id="result"></div>
+
+  <script>
+    const fields = ["age", "anciennete", "revenu", "nb_reclamations", "montant_mensuel", "retards_paiement"];
+    document.getElementById("form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const payload = {};
+      fields.forEach(f => payload[f] = Number(document.getElementById(f).value));
+      const out = document.getElementById("result");
+      try {
+        const r = await fetch("/predict", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await r.json();
+        if (!r.ok) { out.textContent = "Erreur : " + JSON.stringify(data.detail); return; }
+        out.textContent = `Résultat : ${data.prediction} (probabilité ${data.probability})`;
+      } catch (err) {
+        out.textContent = "Erreur : API injoignable";
+      }
+    });
+  </script>
+</body>
+</html>
