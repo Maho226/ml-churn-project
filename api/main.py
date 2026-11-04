@@ -147,8 +147,9 @@ def predict(data: ClientData, request: Request):
     try:
         # DataFrame avec les noms de colonnes utilisés à l'entraînement
         values = pd.DataFrame([data.model_dump()], columns=FEATURES)
-        prediction = int(model.predict(values)[0])
+        # Un seul passage dans la forêt : predict() recalculerait les mêmes probabilités
         probability = float(model.predict_proba(values)[0][1])
+        prediction = 1 if probability > 0.5 else 0  # même règle que model.predict()
     except Exception as exc:  # noqa: BLE001
         duration_ms = round((time.perf_counter() - start) * 1000, 2)
         PREDICTION_ERRORS_TOTAL.labels(MODEL_VERSION).inc()
