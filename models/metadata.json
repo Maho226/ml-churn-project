@@ -1,0 +1,36 @@
+{
+  "model_name": "Random Forest",
+  "model_version": "1.0.0",
+  "trained_at": "2026-11-03T11:45:20+00:00",
+  "features": [
+    "age",
+    "anciennete",
+    "revenu",
+    "nb_reclamations",
+    "montant_mensuel",
+    "retards_paiement"
+  ],
+  "train_size": 1600,
+  "test_size": 400,
+  "metrics": {
+    "logistic_regression": {
+      "accuracy": 0.625,
+      "precision": 0.5821,
+      "recall": 0.4535,
+      "f1": 0.5098
+    },
+    "decision_tree": {
+      "accuracy": 0.6325,
+      "precision": 0.5828,
+      "recall": 0.5116,
+      "f1": 0.5449
+    },
+    "random_forest": {
+      "accuracy": 0.605,
+      "precision": 0.5515,
+      "recall": 0.436,
+      "f1": 0.487
+    }
+  },
+  "selected": "random_forest"
+}
